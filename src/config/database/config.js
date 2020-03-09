@@ -7,17 +7,17 @@ module.exports = {
   // },
 
   development: {
-    database: 'bank',
-    username: 'edson',
-    password: null,
+    database: 'fbank',
+    username: 'postgres',
+    password: 'postgres',
     host: '127.0.0.1',
     dialect: 'postgres'
   },
 
   test: {
-    database: 'bank_test',
-    username: 'edson',
-    password: null,
+    database: 'fbank_test',
+    username: 'postgres',
+    password: 'postgres',
     host: '127.0.0.1',
     dialect: 'postgres'
   },
