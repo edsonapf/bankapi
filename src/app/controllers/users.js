@@ -1,7 +1,22 @@
+// import { params, validationResult } from 'express-validator';
+import { param, validationResult } from 'express-validator';
 import UserService from '../services/userService';
+
+const validation = method => {
+  switch (method) {
+    case 'getUserById':
+      return [param('userId', 'UserId should be an integer.').isInt()];
+    default:
+      console.log('Default Validation!');
+  }
+};
 
 const getUserById = async (req, res) => {
   try {
+    const inputErrors = validationResult(req);
+    if (!inputErrors.isEmpty()) {
+      return res.status(422).json({ inputErrors: inputErrors.array() });
+    }
     const response = await UserService.getUserById(req.params.userId);
     if (response) {
       return res.status(200).send(response);
@@ -10,6 +25,7 @@ const getUserById = async (req, res) => {
     console.log('User has not been found');
     return res.status(404).send('User not found!');
   } catch (err) {
+    console.log(err);
     return res.status(500).send('Something wrong!');
   }
 };
@@ -50,4 +66,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export { getUserById, getUserByCpf, createUser, deleteUser };
+export { validation, getUserById, getUserByCpf, createUser, deleteUser };

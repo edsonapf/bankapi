@@ -1,9 +1,15 @@
 import { Router } from 'express';
-import { getUserById, getUserByCpf, createUser, deleteUser } from '../controllers/users';
+import {
+  validation,
+  getUserById,
+  getUserByCpf,
+  createUser,
+  deleteUser
+} from '../controllers/users';
 
 const routes = new Router();
 
-routes.get('/:userId', getUserById);
+routes.get('/:userId', validation('getUserById'), getUserById);
 
 routes.get('/userCpf', getUserByCpf);
 
