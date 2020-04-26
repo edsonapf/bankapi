@@ -1,12 +1,29 @@
 import { Op } from 'sequelize';
+import bcrypt from 'bcrypt';
 import db from '../models';
 
 class UserService {
   static async createUser(user) {
     try {
-      return await db.Users.create(user);
+      bcrypt.hash(user.password, parseInt(process.env.SALT_ROUNDS), (err, hash) => {
+        if (err) {
+          throw new Error('Error during hash password!');
+        } else {
+          user.password = hash;
+          return db.Users.create(user);
+        }
+      });
     } catch (err) {
       throw new Error('Error during user insert!');
+    }
+  }
+
+  static async getAllUsers() {
+    try {
+      const result = await db.Users.findAll();
+      return result;
+    } catch (e) {
+      throw new Error('Error during find all users!');
     }
   }
 

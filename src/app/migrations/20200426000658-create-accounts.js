@@ -1,33 +1,32 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Transactions', {
+    return queryInterface.createTable('Accounts', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      accountId: {
-        allowNull: false,
+      accountNumber: {
+        autoIncrement: true,
         unique: true,
         type: Sequelize.INTEGER,
+        defaultValue: function() {
+          return 1000001;
+        }
+      },
+      userId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
         references: {
-          model: 'Accounts',
+          model: 'Users',
           key: 'id'
         }
       },
-      transactionType: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
-      transactionValue: {
+      balance: {
         allowNull: false,
         type: Sequelize.DOUBLE
-      },
-      toAccountNumber: {
-        allowNull: true,
-        type: Sequelize.STRING(7)
       },
       createdAt: {
         allowNull: false,
@@ -40,6 +39,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Transactions');
+    return queryInterface.dropTable('Accounts');
   }
 };

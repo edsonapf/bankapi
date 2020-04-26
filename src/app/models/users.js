@@ -1,24 +1,22 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Users = sequelize.define('Users', {
-    cpf: {
-      type: DataTypes.STRING(11),
-      validate: {
-        isNumeric: true
-      }
+  const Users = sequelize.define(
+    'Users',
+    {
+      cpf: DataTypes.STRING,
+      email: DataTypes.STRING,
+      name: DataTypes.STRING,
+      password: DataTypes.STRING,
+      address: DataTypes.STRING,
+      houseNumber: DataTypes.INTEGER,
+      state: DataTypes.STRING,
+      country: DataTypes.STRING,
+      zipcode: DataTypes.STRING,
+      birthday: DataTypes.DATE,
+      profilePhoto: DataTypes.STRING
     },
-    email: {
-      type: DataTypes.STRING(100),
-      validate: {
-        isEmail: true
-      }
-    },
-    name: DataTypes.STRING(255),
-    password: DataTypes.STRING(255),
-    adress: DataTypes.STRING(100),
-    zipcode: DataTypes.STRING(8),
-    birthday: DataTypes.DATE
-  });
+    {}
+  );
   Users.associate = function(models) {
     // associations can be defined here
     Users.hasMany(models.Accounts);

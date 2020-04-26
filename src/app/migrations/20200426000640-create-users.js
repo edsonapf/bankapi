@@ -26,9 +26,21 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(255)
       },
-      adress: {
+      address: {
         allowNull: false,
         type: Sequelize.STRING(100)
+      },
+      houseNumber: {
+        allowNull: true,
+        type: Sequelize.INTEGER
+      },
+      state: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      country: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       zipcode: {
         allowNull: false,
@@ -37,6 +49,10 @@ module.exports = {
       birthday: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      profilePhoto: {
+        allowNull: true,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

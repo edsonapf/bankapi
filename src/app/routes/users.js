@@ -1,20 +1,33 @@
 import { Router } from 'express';
 import {
-  validation,
   getUserById,
-  getUserByCpf,
+  getAllUsers,
+  authenticate,
   createUser,
-  deleteUser
+  deleteUser,
+  updateUser
 } from '../controllers/users';
+import {
+  validationToken,
+  refreshToken,
+  destroyAccessToken,
+  destroyRefreshToken
+} from '../../config/auth/index';
+import validation from '../utils/userValidation';
 
 const routes = new Router();
 
 routes.get('/:userId', validation('getUserById'), getUserById);
+routes.get('/', validationToken, getAllUsers);
 
-routes.get('/userCpf', getUserByCpf);
+routes.post('/login', validation('authenticate'), authenticate);
+routes.post('/logout', destroyAccessToken, destroyRefreshToken);
+routes.post('/refreshToken', refreshToken);
 
-routes.post('/createUser', createUser);
+routes.post('/createUser', validation('createUser'), createUser);
 
-routes.delete('/deleteUser/:userId', deleteUser);
+routes.delete('/deleteUser/:userId', validation('deleteUser'), deleteUser);
+
+routes.put('/updateUser/:userId', validation('updateUser'), updateUser);
 
 export default routes;
