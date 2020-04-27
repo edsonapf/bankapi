@@ -25,7 +25,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DOUBLE
       },
-      toAccountNumber: {
+      transferAccountId: {
         allowNull: true,
         type: Sequelize.INTEGER
       },

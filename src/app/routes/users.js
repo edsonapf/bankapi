@@ -26,8 +26,8 @@ routes.post('/refreshToken', refreshToken);
 
 routes.post('/createUser', validation('createUser'), createUser);
 
-routes.delete('/deleteUser/:userId', validation('deleteUser'), deleteUser);
-
 routes.put('/updateUser/:userId', validation('updateUser'), updateUser);
+
+routes.delete('/deleteUser/:userId', validation('deleteUser'), deleteUser);
 
 export default routes;

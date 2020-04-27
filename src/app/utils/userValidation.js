@@ -31,6 +31,11 @@ const validation = method => {
           .isLength({ min: 6, max: 20 })
           .exists(),
         check('address', 'Address should be sended.').exists(),
+        check('houseNumber', 'House Number should be an integer.')
+          .exists()
+          .isInt(),
+        check('state', 'State should be sended.').exists(),
+        check('country', 'Country should be sended.').exists(),
         check('zipcode', 'ZipCode should be an integer with 8 numbers.')
           .isInt()
           .isLength({ min: 8, max: 8 })
@@ -59,6 +64,11 @@ const validation = method => {
           .isLength({ min: 6, max: 20 })
           .exists(),
         check('address', 'Address should be sended.').exists(),
+        check('houseNumber', 'House Number should be an integer.')
+          .exists()
+          .isInt(),
+        check('state', 'State should be sended.').exists(),
+        check('country', 'Country should be sended.').exists(),
         check('zipcode', 'ZipCode should be an integer with 8 numbers.')
           .isInt()
           .isLength({ min: 8, max: 8 })

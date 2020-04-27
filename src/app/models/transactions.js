@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     accountId: DataTypes.INTEGER,
     transactionType: DataTypes.INTEGER,
     transactionValue: DataTypes.DOUBLE,
-    toAccountNumber: DataTypes.INTEGER
+    transferAccountId: DataTypes.INTEGER
   }, {});
   Transactions.associate = function(models) {
     // associations can be defined here

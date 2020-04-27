@@ -8,14 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      accountNumber: {
-        autoIncrement: true,
-        unique: true,
-        type: Sequelize.INTEGER,
-        defaultValue: function() {
-          return 1000001;
-        }
-      },
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -27,6 +19,10 @@ module.exports = {
       balance: {
         allowNull: false,
         type: Sequelize.DOUBLE
+      },
+      mainAccount: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
