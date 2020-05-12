@@ -18,16 +18,16 @@ import validation from '../utils/userValidation';
 const routes = new Router();
 
 routes.get('/:userId', validation('getUserById'), getUserById);
-routes.get('/', validationToken, getAllUsers);
+routes.get('/', getAllUsers);
 
 routes.post('/login', validation('authenticate'), authenticate);
 routes.post('/logout', destroyAccessToken, destroyRefreshToken);
-routes.post('/refreshToken', refreshToken);
+routes.post('/refresh-token', refreshToken);
 
-routes.post('/createUser', validation('createUser'), createUser);
+routes.post('/create-user', validation('createUser'), createUser);
 
-routes.put('/updateUser/:userId', validation('updateUser'), updateUser);
+routes.put('/update-user/:userId', validation('updateUser'), updateUser);
 
-routes.delete('/deleteUser/:userId', validation('deleteUser'), deleteUser);
+routes.delete('/delete-user/:userId', validation('deleteUser'), deleteUser);
 
 export default routes;

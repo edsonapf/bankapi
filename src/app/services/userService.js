@@ -1,11 +1,11 @@
-import { Op } from 'sequelize';
 import bcrypt from 'bcrypt';
+import { SALT_ROUNDS } from '../../config/env';
 import db from '../models';
 
 class UserService {
   static async createUser(user) {
     try {
-      bcrypt.hash(user.password, parseInt(process.env.SALT_ROUNDS), (err, hash) => {
+      bcrypt.hash(user.password, parseInt(SALT_ROUNDS), (err, hash) => {
         if (err) {
           throw new Error('Error during hash password!');
         } else {
@@ -20,7 +20,22 @@ class UserService {
 
   static async getAllUsers() {
     try {
-      const result = await db.Users.findAll();
+      const result = await db.Users.findAll({
+        attributes: [
+          'id',
+          'cpf',
+          'email',
+          'name',
+          'address',
+          'houseNumber',
+          'state',
+          'country',
+          'zipcode',
+          'birthday',
+          'profilePhoto',
+          'createdAt'
+        ]
+      });
       return result;
     } catch (e) {
       throw new Error('Error during find all users!');
@@ -30,6 +45,20 @@ class UserService {
   static async getUserById(userId) {
     try {
       const result = await db.Users.findOne({
+        attributes: [
+          'id',
+          'cpf',
+          'email',
+          'name',
+          'address',
+          'houseNumber',
+          'state',
+          'country',
+          'zipcode',
+          'birthday',
+          'profilePhoto',
+          'createdAt'
+        ],
         where: {
           id: userId
         }
@@ -44,6 +73,20 @@ class UserService {
   static async getUserByCpf(cpf) {
     try {
       const result = await db.Users.findOne({
+        attributes: [
+          'id',
+          'cpf',
+          'email',
+          'name',
+          'address',
+          'houseNumber',
+          'state',
+          'country',
+          'zipcode',
+          'birthday',
+          'profilePhoto',
+          'createdAt'
+        ],
         where: {
           cpf: cpf
         }
@@ -57,12 +100,7 @@ class UserService {
 
   static async updateUser(userId, updateUser) {
     try {
-      const user = await db.Users.findOne({
-        where: {
-          userId: userId
-        }
-      });
-
+      const user = await this.getUserById(userId);
       if (user) {
         return await update(updateUser, {
           where: {

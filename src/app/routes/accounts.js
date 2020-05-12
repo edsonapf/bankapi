@@ -12,10 +12,20 @@ const routes = new Router();
 
 routes.get('/:userId', validationToken, validation('checkUserId'), getAccountsByUserId);
 
-routes.post('/createAccount', validationToken, validation('createAccount'), createAccount);
+routes.post('/create-account', validationToken, validation('createAccount'), createAccount);
 
-routes.put('/mainAccount', validationToken, validation('checkAccountId'), changeMainAccount);
+routes.put(
+  '/main-account/:accountId',
+  validationToken,
+  validation('checkAccountId'),
+  changeMainAccount
+);
 
-routes.delete('/deleteAccount', validationToken, validation('checkAccountId'), deleteAccount);
+routes.delete(
+  '/delete-account/:accountId',
+  validationToken,
+  validation('checkAccountId'),
+  deleteAccount
+);
 
 export default routes;

@@ -1,9 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import { PORT } from './config/env';
 import userRoutes from './app/routes/users';
 import accountRoutes from './app/routes/accounts';
+import transactionRoutes from './app/routes/transactions';
 
-const port = process.env.PORT || 3000;
+const port = PORT || 3000;
 const app = express();
 
 app.use(bodyParser.json());
@@ -14,9 +16,9 @@ app.listen(port, () => {
 
 app.use('/users', userRoutes);
 app.use('/accounts', accountRoutes);
+app.use('/transactions', transactionRoutes);
 
 app.use((req, res, next) => {
-  console.log(req.url);
   return res.status(404).json({ error: 'not found' });
 });
 

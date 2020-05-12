@@ -1,5 +1,6 @@
 import Redis from 'ioredis';
 import JWTR from 'jwt-redis';
+import env from '../env';
 
 // Connect with redis ip 127.0.0.1:6379
 const redis = new Redis();
@@ -7,10 +8,10 @@ const jwt = new JWTR(redis);
 
 const generateToken = async payload => {
   try {
-    const accessToken = await jwt.sign(payload, `${process.env.SECRET_KEY}`, {
-      expiresIn: `${process.env.TOKEN_EXPIRATION}`
+    const accessToken = await jwt.sign(payload, `${env.SECRET_KEY}`, {
+      expiresIn: `${env.TOKEN_EXPIRATION}`
     });
-    const refreshToken = await jwt.sign(payload, `${process.env.REFRESH_TOKEN_SECRET}`);
+    const refreshToken = await jwt.sign(payload, `${env.REFRESH_TOKEN_SECRET}`);
     const jsonToken = {
       tokenType: 'bearer',
       accessToken: accessToken,
@@ -18,6 +19,7 @@ const generateToken = async payload => {
     };
     return jsonToken;
   } catch (e) {
+    console.log('KKKKKKKKKKKKKKKKKKKKKKKKKKK', e);
     throw new Error('Something wrong during tried to generate token!');
   }
 };
@@ -33,51 +35,52 @@ const getJti = async (token, secret) => {
 
 // Middleware to check authorized request
 const validationToken = async (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ')[1]; // Bearer <token>
+  const { authorization } = req.headers;
+  if (authorization) {
+    const token = authorization.split(' ')[1]; // Bearer <token>
     try {
-      const auth = await jwt.verify(token, `${process.env.SECRET_KEY}`);
+      const auth = await jwt.verify(token, `${env.SECRET_KEY}`);
       next();
     } catch (e) {
-      if (e.name === 'JsonWebTokenError') return res.status(401).send('Wrong authorization token.');
+      if (e.name === 'JsonWebTokenError')
+        return res.status(401).json({ error: 'Wrong authorization token.' });
       else if (e.name === 'TokenExpiredError')
-        return res.status(401).send('Authorization token has expired.');
-      return res.status(401).send('Authorization token does not exist.');
+        return res.status(401).json({ error: 'Authorization token has expired.' });
+      return res.status(401).json({ error: 'Authorization token does not exist.' });
     }
   } else {
-    return res.status(401).send('Authorization token is missing.');
+    return res.status(400).json({ error: 'Authorization token is missing.' });
   }
 };
 
 const refreshToken = async (req, res) => {
-  if (req.body.refreshToken) {
-    const { refreshToken } = req.body;
+  const { refreshToken } = req.body;
+  if (refreshToken) {
     try {
-      const existRefreshToken = await jwt.verify(
-        refreshToken,
-        `${process.env.REFRESH_TOKEN_SECRET}`
-      );
+      const { cpf, id, jti } = await jwt.verify(refreshToken, `${env.REFRESH_TOKEN_SECRET}`);
       const payload = {
-        cpf: existRefreshToken.cpf,
-        id: existRefreshToken.id
+        cpf,
+        id
       };
-      await jwt.destroy(existRefreshToken.jti);
+      await jwt.destroy(jti);
       const newToken = await generateToken(payload);
       return res.status(200).send(newToken);
     } catch (e) {
-      if (e.name === 'JsonWebTokenError') return res.status(401).send('Wrong authorization token.');
+      if (e.name === 'JsonWebTokenError')
+        return res.status(401).json({ error: 'Wrong refresh token.' });
       else if (e.name === 'TokenExpiredError')
-        return res.status(401).send('Authorization token has expired.');
-      return res.status(401).send('Authorization token does not exist.');
+        return res.status(401).json({ error: 'Refresh token has expired.' });
+      return res.status(401).json({ error: 'Refresh token does not exist.' });
     }
   } else {
-    return res.send(400).send('Send your refresh token to be refreshed.');
+    return res.status(400).json({ error: 'Refresh token is missing.' });
   }
 };
 
 const destroyAccessToken = async (req, res, next) => {
-  if (req.headers.authorization) {
-    const accessToken = req.headers.authorization.split(' ')[1];
+  const { authorization } = req.headers;
+  if (authorization) {
+    const accessToken = authorization.split(' ')[1];
     try {
       const accessTokenJti = await getJti(accessToken);
       await jwt.destroy(accessTokenJti);
@@ -88,13 +91,13 @@ const destroyAccessToken = async (req, res, next) => {
       next();
     }
   } else {
-    return res.send(400).send('Send your access token to be destroyed.');
+    return res.status(401).json({ error: 'Access token is missing.' });
   }
 };
 
 const destroyRefreshToken = async (req, res) => {
-  if (req.body.refreshToken) {
-    const refreshToken = req.body.refreshToken;
+  const { refreshToken } = req.body;
+  if (refreshToken) {
     try {
       const refreshTokenJti = await getJti(refreshToken);
       await jwt.destroy(refreshTokenJti);
@@ -105,7 +108,7 @@ const destroyRefreshToken = async (req, res) => {
       return res.status(200).send('You has been logged out');
     }
   } else {
-    return res.send(400).send('Send your refresh token to be destroyed.');
+    return res.status(400).json({ error: 'Refresh token is missing.' });
   }
 };
 

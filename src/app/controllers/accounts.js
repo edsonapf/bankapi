@@ -8,11 +8,11 @@ const createAccount = async (req, res) => {
       return res.status(422).json({ inputErrors: inputErrors.array() });
     }
 
-    const { userId, main } = req.query;
+    const { userId, main } = req.body;
     const account = await AccountService.createAccount(userId, main);
     return res.status(200).send(account);
   } catch (e) {
-    return res.status(500).send('Something wrong when tried to create an account.');
+    return res.status(500).json({ error: 'Something wrong when tried to create an account.' });
   }
 };
 
@@ -29,9 +29,11 @@ const getAccountsByUserId = async (req, res) => {
       return res.status(200).send(accounts);
     }
 
-    return res.status(404).send('User does not have accounts.');
+    return res.status(404).json({ error: 'User does not have accounts.' });
   } catch (e) {
-    return res.status(500).send('Something wrong when tried to list all accounts by userid.');
+    return res
+      .status(500)
+      .json({ error: 'Something wrong when tried to list all accounts by userid.' });
   }
 };
 
@@ -48,9 +50,9 @@ const changeMainAccount = async (req, res) => {
       return res.status(200).send(account);
     }
 
-    return res.status(404).send('Account does not exist.');
+    return res.status(404).json({ error: 'Account does not exist.' });
   } catch (e) {
-    return res.status(500).send('Something wrong when tried to change main account.');
+    return res.status(500).json({ error: 'Something wrong when tried to change main account.' });
   }
 };
 
@@ -67,9 +69,9 @@ const deleteAccount = async (req, res) => {
       return res.status(200).send('Account has been deleted.');
     }
 
-    return res.status(404).send('Account does not exist.');
+    return res.status(404).json({ error: 'Account does not exist.' });
   } catch (e) {
-    return res.status(500).send('Something wrong when tried to delete the account.');
+    return res.status(500).json({ error: 'Something wrong when tried to delete the account.' });
   }
 };
 

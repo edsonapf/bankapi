@@ -16,10 +16,10 @@ const getUserById = async (req, res) => {
     }
 
     console.log('User has not been found');
-    return res.status(404).send('User not found!');
+    return res.status(404).json({ error: 'User not found!' });
   } catch (err) {
     console.log(err);
-    return res.status(500).send('Something wrong!');
+    return res.status(500).json({ error: 'Something wrong!' });
   }
 };
 
@@ -36,9 +36,11 @@ const getUserByCpf = async (req, res) => {
     }
 
     console.log('User with this cpf has not been found');
-    return res.status(404).send('User not found!');
+    return res.status(404).json({ error: 'User not found!' });
   } catch (err) {
-    return res.status(500).send('Something wrong when tried to find an user searching by cpf!');
+    return res
+      .status(500)
+      .json({ error: 'Something wrong when tried to find an user searching by cpf!' });
   }
 };
 
@@ -50,9 +52,9 @@ const getAllUsers = async (req, res) => {
     }
 
     console.log('Users not found!');
-    return res.status(404).send('Users not found!');
+    return res.status(404).json({ error: 'Users not found!' });
   } catch (e) {
-    return res.status(500).send('Something wrong when tried to find all users!');
+    return res.status(500).json({ error: 'Something wrong when tried to find all users!' });
   }
 };
 
@@ -66,7 +68,7 @@ const createUser = async (req, res) => {
     await UserService.createUser(req.body);
     return res.status(200).send('User has been created successfully!');
   } catch (err) {
-    return res.status(500).send('Something wrong when tried to create an user!');
+    return res.status(500).json({ error: 'Something wrong when tried to create an user!' });
   }
 };
 
@@ -82,9 +84,11 @@ const deleteUser = async (req, res) => {
       return res.status(200).send('User has been deleted!');
     }
 
-    return res.status(404).send('User can not be deleted because the user does not exist!');
+    return res
+      .status(404)
+      .json({ error: 'User can not be deleted because the user does not exist!' });
   } catch (err) {
-    return res.status(500).send('Something wrong when tried to delete an user!');
+    return res.status(500).json({ error: 'Something wrong when tried to delete an user!' });
   }
 };
 
@@ -100,9 +104,11 @@ const updateUser = async (req, res) => {
       return res.send(200).send('User has been updated.');
     }
 
-    return res.status(404).send('User can not be updated because the user does not exist!');
+    return res
+      .status(404)
+      .json({ error: 'User can not be updated because the user does not exist!' });
   } catch (e) {
-    return res.status(500).send('Something wrong when tried to update an user!');
+    return res.status(500).json({ error: 'Something wrong when tried to update an user!' });
   }
 };
 
@@ -116,7 +122,7 @@ const authenticate = async (req, res) => {
     const { cpf, password } = req.body;
     const user = await UserService.getUserByCpf(cpf);
     if (!user) {
-      return res.status(404).send('User with this cpf not found!');
+      return res.status(404).json({ error: 'User with this cpf not found!' });
     }
     const matchPassword = await bcrypt.compare(password, user.password);
     if (matchPassword) {
@@ -129,10 +135,11 @@ const authenticate = async (req, res) => {
       return res.status(200).send(token);
     } else {
       console.log('Wrong Password!');
-      return res.status(400).send('Wrong Password!');
+      return res.status(400).json({ error: 'Wrong Password!' });
     }
   } catch (e) {
-    return res.status(500).send('Something wrong when tried to authenticate an user!');
+    console.log(e);
+    return res.status(500).json({ error: 'Something wrong when tried to authenticate an user!' });
   }
 };
 
