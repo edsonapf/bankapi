@@ -15,9 +15,9 @@ routes.get('/:userId', validationToken, validation('checkUserId'), getAccountsBy
 routes.post('/create-account', validationToken, validation('createAccount'), createAccount);
 
 routes.put(
-  '/main-account/:accountId',
+  '/main-account/:user_id/:account_id',
   validationToken,
-  validation('checkAccountId'),
+  validation('changeMainAccount'),
   changeMainAccount
 );
 

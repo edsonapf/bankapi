@@ -4,23 +4,38 @@ const validation = method => {
   switch (method) {
     case 'createAccount':
       return [
-        check('userId', 'You have to pass the userId on the query param.')
+        check('user_id', 'You have to pass the userId at params.')
           .exists()
+          .bail()
           .isInt(),
-        check('main', 'You have to pass if the account is the main on the query param.')
+        check('main', 'You have to pass if the account is the main at params.')
           .exists()
+          .bail()
           .isBoolean()
       ];
     case 'checkUserId':
       return [
-        check('userId', 'You have to pass the userId.')
+        check('user_id', 'You have to pass the userId.')
           .exists()
+          .bail()
           .isInt()
       ];
     case 'checkAccountId':
       return [
-        check('accountId', 'You have to pass the accountId.')
+        check('account_id', 'You have to pass the accountId.')
           .exists()
+          .bail()
+          .isInt()
+      ];
+    case 'changeMainAccount':
+      return [
+        check('user_id', 'You have to pass the userId.')
+          .exists()
+          .bail()
+          .isInt(),
+        check('account_id', 'You have to pass the accountId.')
+          .exists()
+          .bail()
           .isInt()
       ];
     default:

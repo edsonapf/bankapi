@@ -19,7 +19,6 @@ const generateToken = async payload => {
     };
     return jsonToken;
   } catch (e) {
-    console.log('KKKKKKKKKKKKKKKKKKKKKKKKKKK', e);
     throw new Error('Something wrong during tried to generate token!');
   }
 };

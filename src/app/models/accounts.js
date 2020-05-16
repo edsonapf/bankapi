@@ -1,17 +1,18 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Accounts = sequelize.define(
-    'Accounts',
+  const accounts = sequelize.define(
+    'accounts',
     {
-      userId: DataTypes.INTEGER,
+      user_id: DataTypes.INTEGER,
       balance: DataTypes.DOUBLE,
-      mainAccount: DataTypes.BOOLEAN
+      main_account: DataTypes.BOOLEAN
     },
     {}
   );
-  Accounts.associate = function(models) {
+  accounts.associate = function(models) {
     // associations can be defined here
-    Accounts.hasMany(models.Transactions);
+    accounts.belongsTo(models.users, { foreignKey: 'user_id' });
+    accounts.hasMany(models.transactions);
   };
-  return Accounts;
+  return accounts;
 };

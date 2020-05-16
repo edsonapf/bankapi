@@ -4,7 +4,9 @@ import {
   getTransactionsPerDate,
   deposit,
   withdraw,
-  transfer
+  transfer,
+  getUsersNamesFavoritesTransfer,
+  getAccountsFavoritesTransfer
 } from '../controllers/transactions';
 import validation from '../utils/transactionValidation';
 import { validationToken } from '../../config/auth';
@@ -12,16 +14,28 @@ import { validationToken } from '../../config/auth';
 const routes = new Router();
 
 routes.get(
-  '/:accountId',
+  '/:account_id',
   validationToken,
   validation('getAllTransactions'),
   getAllTransactionByAccountId
 );
 routes.get(
-  '/transactions-per-date/:accountId',
+  '/transactions-per-date/:account_id',
   validationToken,
   validation('getTransactionsPerDate'),
   getTransactionsPerDate
+);
+routes.get(
+  '/favorites-names-transfer/:account_id',
+  validationToken,
+  validation('getUsersNamesFavoritesTransfer'),
+  getUsersNamesFavoritesTransfer
+);
+routes.get(
+  '/favorites-accounts-transfer/:account_id/:user_id',
+  validationToken,
+  validation('getAccountsFavoritesTransfer'),
+  getAccountsFavoritesTransfer
 );
 
 routes.post('/deposit', validationToken, validation('depositOrWithdraw'), deposit);

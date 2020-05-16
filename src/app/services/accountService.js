@@ -5,11 +5,11 @@ class AccountService {
   static async createAccount(userId, main) {
     try {
       const accountDetails = {
-        userId: userId,
+        user_id: userId,
         balance: 0,
-        mainAccount: main
+        main_account: main
       };
-      return await db.Accounts.create(accountDetails);
+      return await db.accounts.create(accountDetails);
     } catch (err) {
       throw new Error('Error during create an account!');
     }
@@ -17,11 +17,12 @@ class AccountService {
 
   static async getAccountsByUserId(userId) {
     try {
-      const accounts = await db.Accounts.findAll({
-        attributes: ['id', 'userId', 'balance', 'mainAccount', 'createdAt', 'updatedAt'],
+      const accounts = await db.accounts.findAll({
+        attributes: ['id', 'user_id', 'balance', 'main_account', 'created_at', 'updated_at'],
         where: {
-          userId: userId
-        }
+          user_id: userId
+        },
+        order: ['id']
       });
       if (accounts) {
         return accounts;
@@ -37,11 +38,17 @@ class AccountService {
 
   static async getAccountByAccountId(accountId) {
     try {
-      const account = await db.Accounts.findOne({
-        attributes: ['id', 'userId', 'balance', 'mainAccount', 'createdAt', 'updatedAt'],
+      const account = await db.accounts.findOne({
+        attributes: ['id', 'user_id', 'balance', 'main_account', 'created_at', 'updated_at'],
+        include: {
+          model: db.users,
+          attributes: ['cpf'],
+          required: true
+        },
         where: {
           id: accountId
-        }
+        },
+        order: ['id']
       });
       if (account) {
         return account;
@@ -54,13 +61,13 @@ class AccountService {
     }
   }
 
-  static async changeMainAccount(accountId) {
+  static async changeMainAccount(userId, accountId) {
     let transaction;
     try {
       transaction = await db.sequelize.transaction();
-      const account = await db.Accounts.update(
+      const account = await db.accounts.update(
         {
-          mainAccount: true
+          main_account: true
         },
         {
           where: {
@@ -69,13 +76,13 @@ class AccountService {
           transaction
         }
       );
-      const accounts = await db.Accounts.update(
+      const accounts = await db.accounts.update(
         {
-          mainAccount: false
+          main_account: false
         },
         {
           where: {
-            [Op.and]: [{ userId: account.userId }, { [Op.ne]: accountId }]
+            [Op.and]: [{ user_id: userId }, { id: { [Op.ne]: accountId } }]
           },
           transaction
         }
@@ -83,6 +90,7 @@ class AccountService {
       await transaction.commit();
       return account;
     } catch (e) {
+      console.log(e);
       if (transaction) {
         await transaction.rollback();
       }
@@ -95,7 +103,7 @@ class AccountService {
       const account = await this.getAccountByAccountId(accountId);
       if (account) {
         let balance = account.balance + value;
-        const updatedAccount = await db.Accounts.update(
+        const updatedAccount = await db.accounts.update(
           {
             balance: balance.toFixed(2)
           },
@@ -119,7 +127,7 @@ class AccountService {
     try {
       const account = await this.getAccountByAccountId(accountId);
       if (account) {
-        return await db.Accounts.destroy({
+        return await db.accounts.destroy({
           where: {
             id: accountId
           }

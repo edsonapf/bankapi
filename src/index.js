@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import { PORT } from './config/env';
 import userRoutes from './app/routes/users';
 import accountRoutes from './app/routes/accounts';
@@ -9,6 +10,7 @@ const port = PORT || 3000;
 const app = express();
 
 app.use(bodyParser.json());
+app.use(cors());
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

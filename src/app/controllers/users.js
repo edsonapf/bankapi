@@ -3,6 +3,7 @@ import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import UserService from '../services/userService';
 import { generateToken } from '../../config/auth';
+import path from 'path';
 
 const getUserById = async (req, res) => {
   try {
@@ -143,4 +144,41 @@ const authenticate = async (req, res) => {
   }
 };
 
-export { getUserById, getUserByCpf, createUser, deleteUser, updateUser, authenticate, getAllUsers };
+const uploadPhoto = async (req, res) => {
+  const { file } = req;
+  const { user_id } = req.params;
+  try {
+    const inputErrors = validationResult(req);
+    if (!inputErrors.isEmpty()) {
+      return res.status(422).json({ inputErrors: inputErrors.array() });
+    }
+
+    if (file) {
+      const userUpdated = await UserService.updateUserPhoto(user_id, file.secure_url);
+      if (userUpdated !== null) {
+        return res.status(200).send('Profile image has been uploaded.');
+      }
+
+      return res
+        .status(404)
+        .json({ error: 'Photo can not be uploaded because the user does not exist!' });
+    }
+
+    return res
+      .status(400)
+      .json({ error: 'Image file not found on request. Please send an image.' });
+  } catch (err) {
+    return res.status(500).json({ error: 'internal server error.' });
+  }
+};
+
+export {
+  getUserById,
+  getUserByCpf,
+  createUser,
+  deleteUser,
+  updateUser,
+  authenticate,
+  getAllUsers,
+  uploadPhoto
+};

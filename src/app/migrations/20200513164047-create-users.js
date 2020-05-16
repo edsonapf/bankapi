@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Users', {
+    return queryInterface.createTable('users', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -30,7 +30,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(100)
       },
-      houseNumber: {
+      house_number: {
         allowNull: true,
         type: Sequelize.INTEGER
       },
@@ -50,21 +50,21 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      profilePhoto: {
+      profile_photo: {
         allowNull: true,
         type: Sequelize.STRING
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('users');
   }
 };

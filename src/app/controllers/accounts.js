@@ -8,8 +8,9 @@ const createAccount = async (req, res) => {
       return res.status(422).json({ inputErrors: inputErrors.array() });
     }
 
-    const { userId, main } = req.body;
-    const account = await AccountService.createAccount(userId, main);
+    const { user_id, main } = req.body;
+    const account = await AccountService.createAccount(user_id, main);
+    if (main) await AccountService.changeMainAccount(user_id, account.id);
     return res.status(200).send(account);
   } catch (e) {
     return res.status(500).json({ error: 'Something wrong when tried to create an account.' });
@@ -44,10 +45,10 @@ const changeMainAccount = async (req, res) => {
       return res.status(422).json({ inputErrors: inputErrors.array() });
     }
 
-    const { accountId } = req.params;
-    const account = await AccountService.changeMainAccount(accountId);
+    const { user_id, account_id } = req.params;
+    const account = await AccountService.changeMainAccount(user_id, account_id);
     if (account) {
-      return res.status(200).send(account);
+      return res.status(200).send('This account has turned the main account.');
     }
 
     return res.status(404).json({ error: 'Account does not exist.' });

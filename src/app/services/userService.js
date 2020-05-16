@@ -5,12 +5,12 @@ import db from '../models';
 class UserService {
   static async createUser(user) {
     try {
-      bcrypt.hash(user.password, parseInt(SALT_ROUNDS), (err, hash) => {
+      bcrypt.hash(user.password, parseInt(SALT_ROUNDS), async (err, hash) => {
         if (err) {
           throw new Error('Error during hash password!');
         } else {
           user.password = hash;
-          return db.Users.create(user);
+          return await db.users.create(user);
         }
       });
     } catch (err) {
@@ -20,21 +20,22 @@ class UserService {
 
   static async getAllUsers() {
     try {
-      const result = await db.Users.findAll({
+      const result = await db.users.findAll({
         attributes: [
           'id',
           'cpf',
           'email',
           'name',
           'address',
-          'houseNumber',
+          'house_number',
           'state',
           'country',
           'zipcode',
           'birthday',
-          'profilePhoto',
-          'createdAt'
-        ]
+          'profile_photo',
+          'created_at'
+        ],
+        order: ['id']
       });
       return result;
     } catch (e) {
@@ -44,24 +45,25 @@ class UserService {
 
   static async getUserById(userId) {
     try {
-      const result = await db.Users.findOne({
+      const result = await db.users.findOne({
         attributes: [
           'id',
           'cpf',
           'email',
           'name',
           'address',
-          'houseNumber',
+          'house_number',
           'state',
           'country',
           'zipcode',
           'birthday',
-          'profilePhoto',
-          'createdAt'
+          'profile_photo',
+          'created_at'
         ],
         where: {
           id: userId
-        }
+        },
+        order: ['id']
       });
 
       return result;
@@ -72,20 +74,21 @@ class UserService {
 
   static async getUserByCpf(cpf) {
     try {
-      const result = await db.Users.findOne({
+      const result = await db.users.findOne({
         attributes: [
           'id',
           'cpf',
           'email',
           'name',
+          'password',
           'address',
-          'houseNumber',
+          'house_number',
           'state',
           'country',
           'zipcode',
           'birthday',
-          'profilePhoto',
-          'createdAt'
+          'profile_photo',
+          'created_at'
         ],
         where: {
           cpf: cpf
@@ -102,7 +105,7 @@ class UserService {
     try {
       const user = await this.getUserById(userId);
       if (user) {
-        return await update(updateUser, {
+        return await db.users.update(updateUser, {
           where: {
             id: userId
           }
@@ -116,16 +119,37 @@ class UserService {
     }
   }
 
+  static async updateUserPhoto(userId, filePath) {
+    try {
+      const user = await this.getUserById(userId);
+      if (user) {
+        return await db.users.update(
+          { profile_photo: filePath },
+          {
+            where: {
+              id: userId
+            }
+          }
+        );
+      }
+
+      console.log('We can not upload the user photo beacuse this user does not exist!');
+      return null;
+    } catch (err) {
+      throw new Error('Error during upload user photo.');
+    }
+  }
+
   static async deleteUser(userId) {
     try {
-      const user = await db.Users.findOne({
+      const user = await db.users.findOne({
         where: {
-          userId: userId
+          id: userId
         }
       });
 
       if (user) {
-        return await db.Users.destroy({
+        return await db.users.destroy({
           where: {
             id: userId
           }
