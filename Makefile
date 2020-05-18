@@ -11,10 +11,10 @@ install: ;@echo "Installing ${PROJECT} dependencies and creating database.....";
     sequelize db:seed:all
 
 dev: ;@echo "Running ${PROJECT} in dev environment"; \
-    npm start
+    npm run dev
 
 build: ;@echo "Running ${PROJECT} in prod environment"; \
-    npm run build
+    npm start
 
 delete-tables: ;@echo "Deleting tables from ${DATABASE_NAME}"; \
     sequelize db:migrate:undo ; \
