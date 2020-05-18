@@ -3,7 +3,7 @@ import JWTR from 'jwt-redis';
 import env from '../env';
 
 // Connect with redis ip 127.0.0.1:6379
-const redis = new Redis();
+const redis = new Redis(env.REDIS_URL);
 const jwt = new JWTR(redis);
 
 const generateToken = async payload => {
