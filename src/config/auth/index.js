@@ -1,17 +1,16 @@
 import Redis from 'ioredis';
 import JWTR from 'jwt-redis';
-import env from '../env';
 
 // Connect with redis ip 127.0.0.1:6379
-const redis = new Redis(env.REDIS_URL);
+const redis = new Redis(process.env.REDIS_URL);
 const jwt = new JWTR(redis);
 
 const generateToken = async payload => {
   try {
-    const accessToken = await jwt.sign(payload, `${env.SECRET_KEY}`, {
-      expiresIn: `${env.TOKEN_EXPIRATION}`
+    const accessToken = await jwt.sign(payload, `${process.env.SECRET_KEY}`, {
+      expiresIn: `${process.env.TOKEN_EXPIRATION}`
     });
-    const refreshToken = await jwt.sign(payload, `${env.REFRESH_TOKEN_SECRET}`);
+    const refreshToken = await jwt.sign(payload, `${process.env.REFRESH_TOKEN_SECRET}`);
     const jsonToken = {
       tokenType: 'bearer',
       accessToken: accessToken,
@@ -38,7 +37,7 @@ const validationToken = async (req, res, next) => {
   if (authorization) {
     const token = authorization.split(' ')[1]; // Bearer <token>
     try {
-      const auth = await jwt.verify(token, `${env.SECRET_KEY}`);
+      const auth = await jwt.verify(token, `${process.env.SECRET_KEY}`);
       next();
     } catch (e) {
       if (e.name === 'JsonWebTokenError')
@@ -56,7 +55,10 @@ const refreshToken = async (req, res) => {
   const { refreshToken } = req.body;
   if (refreshToken) {
     try {
-      const { cpf, id, jti } = await jwt.verify(refreshToken, `${env.REFRESH_TOKEN_SECRET}`);
+      const { cpf, id, jti } = await jwt.verify(
+        refreshToken,
+        `${process.env.REFRESH_TOKEN_SECRET}`
+      );
       const payload = {
         cpf,
         id

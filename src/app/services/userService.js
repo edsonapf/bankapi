@@ -1,11 +1,10 @@
 import bcrypt from 'bcrypt';
-import { SALT_ROUNDS } from '../../config/env';
 import db from '../models';
 
 class UserService {
   static async createUser(user) {
     try {
-      bcrypt.hash(user.password, parseInt(SALT_ROUNDS), async (err, hash) => {
+      bcrypt.hash(user.password, parseInt(process.env.SALT_ROUNDS), async (err, hash) => {
         if (err) {
           throw new Error('Error during hash password!');
         } else {

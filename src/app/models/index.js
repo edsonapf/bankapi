@@ -2,10 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
 import configJson from '../../config/database/config';
-import { NODE_ENV, DB_NAME, DB_USER, DB_PASS, DB_HOST, DB_PORT } from '../../config/env';
 
 const basename = path.basename(__filename);
-const env = NODE_ENV ? NODE_ENV : 'development';
+const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 
 const config = configJson[env];
 
@@ -16,9 +15,9 @@ const db = {};
 let sequelize;
 if (config.environment === 'production') {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
-  sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
-    host: DB_HOST,
-    port: DB_PORT,
+  sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     dialect: 'postgres',
     dialectOption: {
       ssl: true,
