@@ -6,6 +6,7 @@ import {
   withdraw,
   transfer,
   getUsersNamesFavoritesTransfer,
+  getTransactionsValuesLast5Months,
   getAccountsFavoritesTransfer
 } from '../controllers/transactions';
 import validation from '../utils/transactionValidation';
@@ -30,6 +31,12 @@ routes.get(
   validationToken,
   validation('getUsersNamesFavoritesTransfer'),
   getUsersNamesFavoritesTransfer
+);
+routes.get(
+  '/transactions-last-5-months/:account_id',
+  validationToken,
+  validation('getTransactionsPerDate'),
+  getTransactionsValuesLast5Months
 );
 routes.get(
   '/favorites-accounts-transfer/:account_id/:user_id',

@@ -7,11 +7,12 @@ const getAllTransactionByAccountId = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { account_id } = req.params;
-    const result = await TransactionService.getAllTransactionByAccountId(account_id);
+    const { page, limit } = req.query;
+    const result = await TransactionService.getAllTransactionByAccountId(account_id, page, limit);
     if (result) {
       return res.status(200).send(result);
     }
@@ -28,15 +29,17 @@ const getTransactionsPerDate = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { account_id } = req.params;
-    const { initial_date, final_date } = req.query;
+    const { initial_date, final_date, page, limit } = req.query;
     const result = await TransactionService.getTransactionsPerDate(
       account_id,
       initial_date,
-      final_date
+      final_date,
+      page,
+      limit
     );
     if (result) {
       return res.status(200).send(result);
@@ -50,12 +53,34 @@ const getTransactionsPerDate = async (req, res) => {
   }
 };
 
+const getTransactionsValuesLast5Months = async (req, res) => {
+  try {
+    const inputErrors = validationResult(req);
+    if (!inputErrors.isEmpty()) {
+      return res.status(400).json({ inputErrors: inputErrors.array() });
+    }
+
+    const { account_id } = req.params;
+    const { initial_date, final_date } = req.query;
+    const result = await TransactionService.getTransactionsValuesLast5Months(
+      account_id,
+      initial_date,
+      final_date
+    );
+    return res.status(200).send(result);
+  } catch (e) {
+    return res
+      .status(500)
+      .json({ error: 'Something wrong when tried to find transactions value for last 5 months.' });
+  }
+};
+
 const deposit = async (req, res) => {
   let sqlTransaction;
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { account_id, value } = req.body;
@@ -92,7 +117,7 @@ const withdraw = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { account_id, value } = req.body;
@@ -138,7 +163,7 @@ const transfer = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { sender_account_id, value, receiver_account_id, cpf } = req.body;
@@ -228,5 +253,6 @@ export {
   withdraw,
   transfer,
   getUsersNamesFavoritesTransfer,
+  getTransactionsValuesLast5Months,
   getAccountsFavoritesTransfer
 };

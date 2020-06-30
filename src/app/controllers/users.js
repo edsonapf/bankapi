@@ -9,7 +9,7 @@ const getUserById = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
     const response = await UserService.getUserById(req.params.userId);
     if (response) {
@@ -28,7 +28,7 @@ const getUserByCpf = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const response = await UserService.getUserByCpf(req.body.cpf);
@@ -63,7 +63,7 @@ const createUser = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     await UserService.createUser(req.body);
@@ -77,7 +77,7 @@ const deleteUser = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const userDeleted = await UserService.deleteUser(req.params.userId);
@@ -97,7 +97,7 @@ const updateUser = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const userUpdated = await UserService.updateUser(req.params.userId);
@@ -117,7 +117,7 @@ const authenticate = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { cpf, password } = req.body;
@@ -150,7 +150,7 @@ const uploadPhoto = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     if (file) {

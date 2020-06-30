@@ -5,7 +5,7 @@ const createAccount = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { user_id, main } = req.body;
@@ -21,7 +21,7 @@ const getAccountsByUserId = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { userId } = req.params;
@@ -42,7 +42,7 @@ const changeMainAccount = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { user_id, account_id } = req.params;
@@ -61,7 +61,7 @@ const deleteAccount = async (req, res) => {
   try {
     const inputErrors = validationResult(req);
     if (!inputErrors.isEmpty()) {
-      return res.status(422).json({ inputErrors: inputErrors.array() });
+      return res.status(400).json({ inputErrors: inputErrors.array() });
     }
 
     const { accountId } = req.params;
