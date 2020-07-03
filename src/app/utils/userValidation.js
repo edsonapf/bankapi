@@ -1,105 +1,106 @@
 import { check } from 'express-validator';
+import { inputErrors } from '../errors/userErrors';
 
 const validation = method => {
   switch (method) {
     case 'userId':
       return [
-        check('user_id', 'UserId should be an integer.')
+        check('user_id', inputErrors.userId)
           .exists()
           .bail()
           .isInt()
       ];
     case 'authenticate':
       return [
-        check('cpf', 'CPF should be an integer with 11 numbers.')
+        check('cpf', inputErrors.cpf)
           .exists()
           .bail()
           .isInt()
           .isLength({ min: 11, max: 11 }),
-        check('password', 'Password error message will be defined after.')
+        check('password', inputErrors.password)
           .exists()
           .bail()
           .isLength({ min: 6, max: 20 })
       ];
     case 'createUser':
       return [
-        check('cpf', 'CPF should be an integer with 11 numbers.')
+        check('cpf', inputErrors.cpf)
           .exists()
           .bail()
           .isInt()
           .isLength({ min: 11, max: 11 }),
-        check('email', 'Email error message will be defined after.')
+        check('email', inputErrors.email)
           .exists()
           .bail()
           .isEmail(),
-        check('name', 'Name should be sended.').exists(),
-        check('password', 'Password error message will be defined after.')
+        check('name', inputErrors.name).exists(),
+        check('password', inputErrors.password)
           .exists()
           .bail()
           .isLength({ min: 6, max: 20 }),
-        check('address', 'Address should be sended.')
+        check('address', inputErrors.address)
           .exists()
           .bail(),
-        check('house_number', 'House Number should be an integer.')
+        check('house_number', inputErrors.house_number)
           .exists()
           .bail()
           .isInt(),
-        check('state', 'State should be sended.')
+        check('state', inputErrors.state)
           .exists()
           .bail(),
-        check('country', 'Country should be sended.')
+        check('country', inputErrors.country)
           .exists()
           .bail(),
-        check('zipcode', 'ZipCode should be an integer with 8 numbers.')
+        check('zipcode', inputErrors.zipcode)
           .exists()
           .bail()
           .isInt()
           .isLength({ min: 8, max: 8 }),
-        check('birthday', 'Birthday should be a date.')
+        check('birthday', inputErrors.birthday)
           .exists()
           .bail()
           .isISO8601()
       ];
     case 'deleteUser':
       return [
-        check('user_id', 'UserId should be sended.')
+        check('user_id', inputErrors.userId)
           .exists()
           .bail()
           .isInt()
       ];
     case 'updateUser':
       return [
-        check('user_id', 'UserId should be sended.')
+        check('user_id', inputErrors.userId)
           .exists()
           .bail()
           .isInt(),
-        check('cpf', 'CPF should be an integer with 11 numbers.')
+        check('cpf', inputErrors.cpf)
           .exists()
           .bail()
           .isInt()
           .isLength({ min: 11, max: 11 }),
-        check('email', 'Email error message will be defined after.')
+        check('email', inputErrors.email)
           .exists()
           .bail()
           .isEmail(),
-        check('name', 'Name should be sended.').exists(),
-        check('password', 'Password error message will be defined after.')
+        check('name', inputErrors.name).exists(),
+        check('password', inputErrors.password)
           .exists()
           .bail()
           .isLength({ min: 6, max: 20 }),
-        check('address', 'Address should be sended.').exists(),
-        check('house_number', 'House Number should be an integer.')
+        check('address', inputErrors.address).exists(),
+        check('house_number', inputErrors.house_number)
           .exists()
           .bail()
           .isInt(),
-        check('state', 'State should be sended.').exists(),
-        check('country', 'Country should be sended.').exists(),
-        check('zipcode', 'ZipCode should be an integer with 8 numbers.')
+        check('state', inputErrors.state).exists(),
+        check('country', inputErrors.cou).exists(),
+        check('zipcode', inputErrors.zipcode)
           .exists()
           .bail()
           .isInt()
           .isLength({ min: 8, max: 8 }),
-        check('birthday', 'Birthday should be a date.')
+        check('birthday', inputErrors.birthday)
           .exists()
           .bail()
           .isISO8601()

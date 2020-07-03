@@ -1,79 +1,74 @@
 import { check } from 'express-validator';
+import { inputErrors } from '../errors/transactionErrors';
 
 const validation = method => {
   switch (method) {
     case 'getAllTransactions':
       return [
-        check('account_id', 'You have to pass the accountId.')
+        check('account_id', inputErrors.accountId)
           .exists()
           .bail()
           .isInt()
       ];
     case 'getTransactionsPerDate':
       return [
-        check('account_id', 'You have to pass the account_id.')
+        check('account_id', inputErrors.accountId)
           .exists()
           .bail()
           .isInt(),
-        check('initial_date', 'You have to pass the initial date.')
+        check('initial_date', inputErrors.initialDate)
           .exists()
           .bail()
           .isISO8601(),
-        check('final_date', 'You have to pass the final date.')
+        check('final_date', inputErrors.finalDate)
           .exists()
           .bail()
           .isISO8601()
       ];
     case 'getUsersNamesFavoritesTransfer':
       return [
-        check('account_id', 'You have to pass the account_id.')
+        check('account_id', inputErrors.accountId)
           .exists()
           .bail()
           .isInt()
       ];
     case 'getAccountsFavoritesTransfer':
       return [
-        check('account_id', 'You have to pass the account_id.')
+        check('account_id', inputErrors.accountId)
           .exists()
           .bail()
           .isInt(),
-        check('user_id', 'You have to pass the user_id.')
+        check('user_id', inputErrors.userId)
           .exists()
           .bail()
           .isInt()
       ];
     case 'depositOrWithdraw':
       return [
-        check('account_id', 'You have to pass the account_id.')
+        check('account_id', inputErrors.accountId)
           .exists()
           .bail()
           .isInt(),
-        check('value', 'You have to pass the transaction value')
+        check('value', inputErrors.value)
           .exists()
           .bail()
           .isFloat()
       ];
     case 'transfer':
       return [
-        check(
-          'sender_account_id',
-          'You have to pass the accountId of the person who is sending the money.'
-        )
+        check('sender_account_id', inputErrors.senderAccountId)
           .exists()
           .bail()
           .isInt(),
-        check('value', 'You have to pass the transaction value')
+        check('value', inputErrors.value)
           .exists()
           .bail()
           .isFloat(),
-        check(
-          'receiver_account_id',
-          'You have to pass the accountId of the person who is receiving the money.'
-        )
+        check('receiver_account_id', inputErrors.receiverAccountId)
           .exists()
           .bail()
           .isInt(),
-        check('cpf', 'CPF should be an integer with 11 numbers.')
+        check('cpf', inputErrors.cpf)
           .exists()
           .bail()
           .isInt()
